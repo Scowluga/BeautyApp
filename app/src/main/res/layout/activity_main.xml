@@ -28,13 +28,22 @@
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/query"/>
+                android:drawableLeft="@drawable/questionmark"/>
+
+            <Button
+                android:id="@+id/gbtn"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/github"/>
+
             <Button
                 android:id="@+id/sbtn"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/star"/>
+
+                android:drawableLeft="@drawable/playstore"/>
 
         </LinearLayout>
     </FrameLayout>

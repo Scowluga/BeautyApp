@@ -35,10 +35,14 @@ public class MainActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
 
     // privacy policy URL
-    private static final String PRIVACY_POLICY = "";
+    private static final String PRIVACY_POLICY = "https://github.com/Scowluga/BeautyApp/blob/master/PRIVACYPOLICY.md";
+    private static final String GITHUB_URL = "https://github.com/Scowluga/BeautyApp";
 
     // view with camera
     private static CameraView view;
+
+    // for requesting permission again 
+    private static boolean requestAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +93,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button play = (Button)findViewById(R.id.gbtn);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_URL));
+                startActivity(intent);
+            }
+        });
+
         Button question = (Button)findViewById(R.id.qbtn);
         question.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("What's this?")
-                        .setMessage("The most beautiful application is one with you!")
+                        .setMessage("The World's Most Beautiful App is one with you. No filters, no enhancements, just you!" )
                         .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -109,6 +122,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (requestAgain) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) { // NOT GRANTED
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
+            }
+            requestAgain = false;
+        }
         if (view != null && view.mCamera != null) {
             CameraView.setCameraDisplayOrientation(MainActivity.this, view.mCamera);
         }
@@ -138,6 +161,22 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     setup();
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("What's this?")
+                                    .setMessage("The World's Most Beautiful App is one with you. No filters, no enhancements, just you!" )
+                                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
+                        }
+                    }, 5000);
+
                 } else { // not allowed
                     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                     alertDialog.setTitle("Sorry");
@@ -163,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Why", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            requestAgain = true;
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY));
                             startActivity(intent);
                         }
