@@ -9,7 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Camera;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +18,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setup() {
         // load camera
-        view = (CameraView)findViewById(R.id.cameraView);
-        view.setVisibility(View.VISIBLE);
+        view = new CameraView(MainActivity.this);
+        view.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ((FrameLayout)findViewById(R.id.frameLayout)).addView(view, 0);
 
         // set on click listeners
         Button star = (Button)findViewById(R.id.sbtn);
@@ -91,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(MainActivity.this)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("What's this?")
                         .setMessage("The most beautiful application is one with you!")
                         .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
@@ -123,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (view != null && view.mCamera != null) {
+//        if (view != null && view.mCamera != null) {
 //            CameraView.setCameraDisplayOrientation(MainActivity.this, view.mCamera);
-        }
+//        }
     }
 
     @Override
@@ -136,17 +138,16 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     setup();
-                    view.mCamera.startPreview();
                 } else { // not allowed
-                    final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                     alertDialog.setTitle("Sorry");
                     alertDialog.setMessage("We need permission to access your camera for this application to work.");
-//                    alertDialog.col
 //                    alertDialog.setIcon();
                     alertDialog.setCancelable(false);
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ok",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
                                     ActivityCompat.requestPermissions(MainActivity.this,
                                             new String[]{Manifest.permission.CAMERA},
                                             MY_PERMISSIONS_REQUEST_CAMERA);
@@ -155,8 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Exit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            alertDialog.dismiss();
-                            System.exit(1);
+                            finishAffinity();
                         }
                     });
 

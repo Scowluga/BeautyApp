@@ -6,12 +6,6 @@
     android:id="@+id/frameLayout"
     android:background="@android:color/black">
 
-    <com.example.david.beautyapp.CameraView
-        android:id="@+id/cameraView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +19,8 @@
             android:layout_gravity="top|center_horizontal"
             android:orientation="horizontal"
             android:layoutDirection="rtl"
-            tools:ignore="UselessParent">
+            tools:ignore="UselessParent"
+            android:elevation="3dp">
             <!--android:background="@color/black_overlay"-->
 
             <Button

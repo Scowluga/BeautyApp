@@ -1,10 +1,11 @@
 package com.example.david.beautyapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -15,26 +16,27 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
     private SurfaceHolder mHolder;
     protected Camera mCamera;
+    private Activity mActivity;
 
-    public CameraView(Context context) {
-        super(context);
-        if(checkCameraHardware(context))  {
+    public CameraView(final Activity act) {
+        super(act);
+        mActivity = act;
+        if(checkCameraHardware(mActivity))  {
             mCamera = getCameraInstance();
+            mHolder = getHolder();
+            mHolder.addCallback(this);
+            mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        } else {
+            new AlertDialog.Builder(mActivity)
+                    .setTitle("Sorry")
+                    .setMessage("This application requires a front-facing camera.")
+                    .setNeutralButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mActivity.finishAffinity();
+                        }
+                    }).show();
         }
-        mHolder = getHolder();
-        mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-    }
-
-    public CameraView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        if(checkCameraHardware(context))  {
-            mCamera = getCameraInstance();
-        }
-        mHolder = getHolder();
-        mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     @Override
@@ -45,6 +47,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
             mCamera.startPreview();
         } catch (IOException e) {
             Log.d("CameraView", "Error setting camera preview: " + e.getMessage());
+            new AlertDialog.Builder(mActivity)
+                    .setTitle("Whoops")
+                    .setMessage("Error setting camera preview: " + e.getMessage())
+                    .setNeutralButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mActivity.finishAffinity();
+                        }
+                    }).show();
         }
     }
 
@@ -78,7 +89,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    public static Camera getCameraInstance(){
+    public Camera getCameraInstance(){
         Camera cam = null;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         int cameraCount = Camera.getNumberOfCameras();
@@ -87,11 +98,22 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 try {
                     cam = Camera.open(camIdx);
+                    return cam;
                 } catch (RuntimeException e) {
-                    Log.e("TAG", "Camera failed to open: " + e.toString());
+
                 }
             }
         }
+        // failed to locate
+        new AlertDialog.Builder(mActivity)
+                .setTitle("Sorry")
+                .setMessage("This application requires a front-facing camera.")
+                .setNeutralButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mActivity.finishAffinity();
+                    }
+                }).show();
 
         return cam;
     }
