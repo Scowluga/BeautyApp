@@ -5,7 +5,17 @@
     tools:context="com.example.david.beautyapp.MainActivity"
     android:id="@+id/frameLayout"
     android:background="@android:color/black">
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/white">-->
 
+        <!--<ImageView-->
+            <!--android:src="@drawable/qmark"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--/>-->
+    <!--</FrameLayout>-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     // view with camera
     private static CameraView view;
 
-    // for requesting permission again 
+    // for requesting permission again
     private static boolean requestAgain;
 
     @Override
