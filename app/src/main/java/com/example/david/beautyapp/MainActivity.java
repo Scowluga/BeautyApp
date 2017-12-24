@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     // request permission
@@ -133,7 +135,13 @@ public class MainActivity extends AppCompatActivity {
             requestAgain = false;
         }
         if (view != null && view.mCamera != null) {
-            CameraView.setCameraDisplayOrientation(MainActivity.this, view.mCamera);
+            try {
+                view.mCamera.setPreviewDisplay(view.mHolder);
+                view.mCamera.startPreview();
+            } catch (IOException e) {
+                Toast.makeText(this, "Unable to restart camera", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 
@@ -143,14 +151,6 @@ public class MainActivity extends AppCompatActivity {
         if (view != null && view.mCamera != null) {
             view.mCamera.stopPreview();
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-//        if (view != null && view.mCamera != null) {
-//            CameraView.setCameraDisplayOrientation(MainActivity.this, view.mCamera);
-//        }
     }
 
     @Override
