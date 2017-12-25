@@ -15,17 +15,7 @@
        at The World's Most Beautiful App unless otherwise defined in this Privacy Policy.
     </p>
     <p><strong>Information Collection and Use</strong></p>
-    <p>For a better experience, while using our Service, I may require you to provide us with certain
-       personally identifiable information, including but not limited to None. The information that I request is retained on your device and is not collected by me in any way
-    </p>
-    <p>The app does use third party services that may collect information used to identify you.</p>
-    <div>
-       <p>Link to privacy policy of third party service providers used by the app </p>
-       <ul>
-          <li><a href="https://www.google.com/policies/privacy/" target="_blank">Google Play Services</a></li>
-          <!----> <!----> <!---->
-       </ul>
-    </div>
+    <p>This app does not save, collect, or distribute any information in any way. This app requires the CAMERA permission to preview the camera onto the screen, and will never record or take pictures to store. 
     <p><strong>Log Data</strong></p>
     <p> I want to inform you that whenever you use my Service, in a case of an
        error in the app I collect data and information (through third party products) on your phone
